@@ -20,7 +20,9 @@ import {
 
 function Authentication() {
   const [params] = useSearchParams();
-  const [formState, setFormState] = useState(params.get("mode") === "register" ? 1 : 0); // 0 = login, 1 = register
+  const [formState, setFormState] = useState(
+    params.get("mode") === "register" ? 1 : 0,
+  ); // 0 = login, 1 = register
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -38,8 +40,16 @@ function Authentication() {
   // Only the register form enforces the format rules; login just needs values.
   const errors = {
     name: isRegister ? nameError(name) : "",
-    username: isRegister ? usernameError(username) : username.trim() ? "" : "Enter your username",
-    password: isRegister ? passwordError(password) : password ? "" : "Enter your password",
+    username: isRegister
+      ? usernameError(username)
+      : username.trim()
+        ? ""
+        : "Enter your username",
+    password: isRegister
+      ? passwordError(password)
+      : password
+        ? ""
+        : "Enter your password",
   };
   const hasErrors = Object.values(errors).some(Boolean);
   const show = (field) => touched[field] && errors[field];
@@ -63,7 +73,11 @@ function Authentication() {
       if (formState === 0) {
         await handleLogin(username.trim(), password);
       } else {
-        const result = await handleRegister(name.trim(), normalizeUsername(username), password);
+        const result = await handleRegister(
+          name.trim(),
+          normalizeUsername(username),
+          password,
+        );
         setMessage(`${result}. You can log in now.`);
         setUsername(normalizeUsername(username));
         switchModeKeepingMessage();
@@ -88,16 +102,21 @@ function Authentication() {
         <Brand />
         <div>
           <h2>Meet anyone, anywhere.</h2>
-          <p>Create an account to start meetings, keep your history and save your contacts.</p>
+          <p>
+            Create an account to start meetings, keep your history and save your
+            contacts.
+          </p>
         </div>
-        <small style={{ color: "#bfdbfe" }}>© Apna Video Call</small>
+        <small style={{ color: "#bfdbfe" }}>© Pocket Meet</small>
       </aside>
 
       <div className="authFormWrap">
         <form className="authForm" onSubmit={handleAuth} noValidate>
           <h1>{isRegister ? "Create your account" : "Welcome back"}</h1>
           <p className="cardSub" style={{ marginBottom: 0 }}>
-            {isRegister ? "It takes less than a minute." : "Log in to continue to your meetings."}
+            {isRegister
+              ? "It takes less than a minute."
+              : "Log in to continue to your meetings."}
           </p>
 
           {message && <Alert severity="success">{message}</Alert>}
@@ -125,7 +144,12 @@ function Authentication() {
             onChange={(e) => setUsername(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, username: true }))}
             error={Boolean(show("username"))}
-            helperText={show("username") || (isRegister ? "Letters, numbers and underscores. Not case sensitive." : "")}
+            helperText={
+              show("username") ||
+              (isRegister
+                ? "Letters, numbers and underscores. Not case sensitive."
+                : "")
+            }
             slotProps={{ htmlInput: { maxLength: 20 } }}
           />
 
@@ -137,17 +161,25 @@ function Authentication() {
             onChange={(e) => setPassword(e.target.value)}
             onBlur={() => setTouched((t) => ({ ...t, password: true }))}
             error={Boolean(show("password"))}
-            helperText={show("password") || (isRegister ? "At least 8 characters." : "")}
+            helperText={
+              show("password") || (isRegister ? "At least 8 characters." : "")
+            }
             slotProps={{
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                      }
                       onClick={() => setShowPassword((v) => !v)}
                       edge="end"
                     >
-                      {showPassword ? <VisibilityOffRoundedIcon /> : <VisibilityRoundedIcon />}
+                      {showPassword ? (
+                        <VisibilityOffRoundedIcon />
+                      ) : (
+                        <VisibilityRoundedIcon />
+                      )}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -155,15 +187,37 @@ function Authentication() {
             }}
           />
 
-          <Button type="submit" variant="contained" size="large" disabled={loading} sx={{ py: 1.4 }}>
-            {loading ? <CircularProgress size={22} color="inherit" /> : isRegister ? "Create account" : "Log in"}
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={loading}
+            sx={{ py: 1.4 }}
+          >
+            {loading ? (
+              <CircularProgress size={22} color="inherit" />
+            ) : isRegister ? (
+              "Create account"
+            ) : (
+              "Log in"
+            )}
           </Button>
 
           <div className="authSwitch">
             {isRegister ? (
-              <>Already have an account? <button type="button" onClick={() => switchMode(0)}>Log in</button></>
+              <>
+                Already have an account?{" "}
+                <button type="button" onClick={() => switchMode(0)}>
+                  Log in
+                </button>
+              </>
             ) : (
-              <>New here? <button type="button" onClick={() => switchMode(1)}>Create an account</button></>
+              <>
+                New here?{" "}
+                <button type="button" onClick={() => switchMode(1)}>
+                  Create an account
+                </button>
+              </>
             )}
           </div>
         </form>

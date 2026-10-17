@@ -14,7 +14,7 @@ export default function Brand({ to = "/" }) {
       <span className="brandMark">
         <VideocamRoundedIcon fontSize="small" />
       </span>
-      Apna Video Call
+      Pocket Meet
     </span>
   );
 }
